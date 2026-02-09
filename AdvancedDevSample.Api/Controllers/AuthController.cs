@@ -29,7 +29,7 @@ namespace AdvancedDevSample.Api.Controllers
         /// <returns>Token JWT si les identifiants sont valides</returns>
         /// <remarks>
         /// Utilisateurs de test:
-        /// - Username: admin, Password: password
+       /// - Username: admin, Password: password
         /// - Username: user, Password: password
         /// </remarks>
         [HttpPost("login")]

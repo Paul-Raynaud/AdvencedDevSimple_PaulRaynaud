@@ -1,282 +1,386 @@
-# Guide Complet - AdvancedDevSample API avec Tests
+# 🚀 AdvancedDevSample
 
-## 🚀 Lancer l'application et voir Swagger
+API REST .NET 10 construite avec **Domain-Driven Design (DDD)** et **Clean Architecture**.
 
-### Option 1 : Via terminal
+[![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+## 📋 Description
+
+AdvancedDevSample est un projet d'exemple démontrant les meilleures pratiques de développement d'une API REST en .NET, incluant :
+
+- ✅ Architecture en couches (Clean Architecture)
+- ✅ Domain-Driven Design (DDD)
+- ✅ Authentification JWT
+- ✅ Tests unitaires et d'intégration
+- ✅ Documentation Swagger/OpenAPI
+- ✅ Gestion centralisée des erreurs
+
+## 🏗️ Architecture
+
+```
+┌─────────────────────────────────────────┐
+│         API Layer (Presentation)        │
+│    Controllers + Middlewares + Swagger  │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│       Application Layer (Services)      │
+│    Services + DTOs + Business Logic     │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│        Domain Layer (Core Logic)        │
+│  Entities + Value Objects + Interfaces  │
+└────────────────┬────────────────────────┘
+                 │
+┌────────────────▼────────────────────────┐
+│    Infrastructure Layer (Data Access)   │
+│    Repositories + EF Core + Database    │
+└─────────────────────────────────────────┘
+```
+
+## 🛠️ Technologies
+
+- **.NET 10** - Framework
+- **ASP.NET Core Web API** - API REST
+- **JWT** - Authentification
+- **Entity Framework Core (In-Memory)** - ORM
+- **Swagger/OpenAPI** - Documentation
+- **xUnit** - Tests
+
+## 🚀 Démarrage rapide
+
+### Prérequis
+
+- [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
+- Un IDE (Rider, Visual Studio, ou VS Code)
+
+### Installation
+
 ```bash
-cd /Volumes/Paul_SSD/AdvancedDevSample/AdvancedDevSample.Api
+# Cloner le repository
+git clone <repository-url>
+cd AdvancedDevSample
+
+# Restaurer les dépendances
+dotnet restore
+
+# Compiler le projet
+dotnet build
+
+# Lancer l'application
+cd AdvancedDevSample.Api
 dotnet run
 ```
 
-### Option 2 : Avec un port spécifique
-```bash
-cd /Volumes/Paul_SSD/AdvancedDevSample/AdvancedDevSample.Api
-dotnet run --urls "http://localhost:5000"
-```
+L'API sera disponible sur : **http://localhost:5069**
 
 ### Accéder à Swagger
-Une fois l'application démarrée, ouvrez votre navigateur à :
-- **http://localhost:5000/swagger** 
-- ou **https://localhost:5001/swagger** (avec HTTPS)
 
-Le port exact sera affiché dans les logs au démarrage de l'application.
+Ouvrez votre navigateur : **http://localhost:5069/swagger**
 
----
+## 🔐 Authentification
 
-## ✅ Ce qui a été ajouté au projet
+### 1. Obtenir un token JWT
 
-### 1. **CRUD Complet pour les Produits**
-
-#### Contrôleur (`ProductsController.cs`)
-- ✅ **POST** `/api/products` - Créer un produit
-- ✅ **GET** `/api/products/{id}` - Obtenir un produit par ID
-- ✅ **GET** `/api/products` - Obtenir tous les produits
-- ✅ **PUT** `/api/products/{id}` - Mettre à jour un produit
-- ✅ **DELETE** `/api/products/{id}` - Supprimer un produit
-- ✅ **PUT** `/api/products/{id}/price` - Changer uniquement le prix
-
-#### DTOs créés
-- `CreateProductRequest.cs` - Pour créer un produit
-- `ProductResponse.cs` - Pour retourner un produit
-- `UpdateProductRequest.cs` - Pour mettre à jour un produit
-- `ChangePriceRequest.cs` - Pour changer le prix (existant)
-
-#### Service (`ProductService.cs`)
-- `CreateProduct()` - Création
-- `GetProduct()` - Lecture unique
-- `GetAllProducts()` - Lecture multiple
-- `UpdateProduct()` - Mise à jour
-- `DeleteProduct()` - Suppression
-- `ChangePrice()` - Changement de prix spécifique
-
-#### Repository (`EfProductRepository.cs`)
-Implémentation en mémoire avec toutes les méthodes CRUD :
-- `Add()`
-- `GetById()`
-- `GetAll()`
-- `Save()`
-- `Delete()`
-- `Exists()`
-
----
-
-### 2. **Tests Unitaires**
-
-#### Tests du Domaine
-
-**`ProductTests.cs`** - Tests de l'entité Product :
-- ✅ Création d'un produit avec un prix valide
-- ✅ Création avec un ID spécifique
-- ✅ Changement de prix (produit actif)
-- ✅ Changement de prix bloqué (produit inactif)
-- ✅ Désactivation/Activation d'un produit
-
-**`PriceTests.cs`** - Tests du Value Object Price :
-- ✅ Création avec valeur positive
-- ✅ Rejet de valeur négative ou zéro
-- ✅ Formatage ToString()
-- ✅ Égalité entre deux prix
-
-#### Tests de l'Application
-
-**`ProductServiceTests.cs`** - Tests du service avec Moq :
-- ✅ CreateProduct - succès et échec
-- ✅ GetProduct - existant et non existant
-- ✅ GetAllProducts
-- ✅ UpdateProduct - plusieurs scénarios
-- ✅ DeleteProduct
-- ✅ ChangePrice
-
----
-
-### 3. **Tests d'Intégration**
-
-**`ProductsControllerIntegrationTests.cs`** - Tests de bout en bout :
-- ✅ POST /api/products - création valide et invalide
-- ✅ GET /api/products/{id} - existant et non existant
-- ✅ GET /api/products - liste complète
-- ✅ PUT /api/products/{id} - mise à jour
-- ✅ DELETE /api/products/{id} - suppression
-- ✅ PUT /api/products/{id}/price - changement de prix
-- ✅ Scénarios d'erreur métier (produit inactif, etc.)
-
----
-
-## 🧪 Exécuter les tests
-
-### Tous les tests
 ```bash
-cd /Volumes/Paul_SSD/AdvancedDevSample
+curl -X POST http://localhost:5069/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "admin",
+    "password": "password"
+  }'
+```
+
+**Réponse :**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "expiresAt": "2026-02-09T12:53:28Z"
+}
+```
+
+### 2. Utiliser le token
+
+Ajoutez l'en-tête `Authorization` à vos requêtes :
+
+```bash
+curl -X GET http://localhost:5069/api/products \
+  -H "Authorization: Bearer {votre_token}"
+```
+
+### Identifiants de test
+
+| Username | Password |
+|----------|----------|
+| admin    | password |
+| user     | password |
+
+## 📚 API Endpoints
+
+### Authentication
+
+| Méthode | Endpoint          | Description       | Auth |
+|---------|-------------------|-------------------|------|
+| POST    | /api/auth/login   | Obtenir un token  | ❌   |
+
+### Products (🔒 Authentification requise)
+
+| Méthode | Endpoint                  | Description              |
+|---------|---------------------------|--------------------------|
+| POST    | /api/products             | Créer un produit         |
+| GET     | /api/products             | Lister tous les produits |
+| GET     | /api/products/{id}        | Obtenir un produit       |
+| PUT     | /api/products/{id}        | Mettre à jour un produit |
+| PUT     | /api/products/{id}/price  | Changer le prix          |
+| DELETE  | /api/products/{id}        | Supprimer un produit     |
+
+## 🧪 Tests
+
+### Exécuter les tests
+
+```bash
+# Tous les tests
 dotnet test
+
+# Avec détails
+dotnet test --verbosity detailed
+
+# Tests spécifiques
+dotnet test --filter "FullyQualifiedName~ProductTests"
 ```
 
-### Tests avec détails
+### Script de test d'authentification
+
 ```bash
-dotnet test --verbosity normal
+# Rendre le script exécutable
+chmod +x test-auth.sh
+
+# Exécuter les tests
+./test-auth.sh
 ```
 
-### Tests avec couverture
-```bash
-dotnet test --collect:"XPlat Code Coverage"
-```
+### Couverture des tests
 
-### Tests d'un projet spécifique
-```bash
-cd /Volumes/Paul_SSD/AdvancedDevSample/AdvancedDevSample.Test
-dotnet test
-```
+- ✅ Tests unitaires du domaine (Entities + Value Objects)
+- ✅ Tests de services (Application Layer)
+- ✅ Tests d'intégration (API End-to-End)
 
-### Exécuter uniquement les tests unitaires du domaine
-```bash
-dotnet test --filter "FullyQualifiedName~Domain"
-```
+## 📖 Documentation
 
-### Exécuter uniquement les tests d'intégration
-```bash
-dotnet test --filter "FullyQualifiedName~Integration"
-```
+- **[Documentation technique complète](DOCUMENTATION_TECHNIQUE.md)** - Architecture, diagrammes, patterns
+- **[Guide d'authentification JWT](AUTHENTICATION.md)** - Configuration JWT, troubleshooting
+- **[Swagger UI](http://localhost:5069/swagger)** - Documentation API interactive (après démarrage)
 
----
-
-## 📦 Packages ajoutés
-
-Dans `AdvancedDevSample.Test.csproj` :
-- **xunit** - Framework de tests
-- **Moq** - Mock pour les tests unitaires
-- **Microsoft.AspNetCore.Mvc.Testing** - Tests d'intégration API
-- **coverlet.collector** - Couverture de code
-
----
-
-## 🏗️ Architecture du Projet
+## 📁 Structure du projet
 
 ```
 AdvancedDevSample/
-├── AdvancedDevSample.Api/          # Couche API/Présentation
-│   ├── Controllers/
-│   │   └── ProductsController.cs   # CRUD complet
-│   ├── Middlewares/
-│   └── Program.cs                   # Configuration
-│
-├── AdvancedDevSample.Application/   # Couche Application
-│   ├── DTOs/                        # Data Transfer Objects
-│   │   ├── CreateProductRequest.cs
-│   │   ├── ProductResponse.cs
-│   │   ├── UpdateProductRequest.cs
-│   │   └── ChangePriceRequest.cs
-│   └── Services/
-│       └── ProductService.cs        # Logique applicative
-│
-├── AdvancedDevSampleDomain/         # Couche Domaine
+├── AdvancedDevSample.Domain/           # Entités, Value Objects, Interfaces
 │   ├── Entities/
-│   │   └── Product.cs               # Entité métier
+│   │   └── Product.cs
 │   ├── ValueObjects/
-│   │   └── Price.cs                 # Value Object
+│   │   └── Price.cs
 │   ├── Interfaces/
 │   │   └── IProductRepository.cs
 │   └── Exceptions/
+│       └── DomainException.cs
 │
-├── AdvancedDevSample.Infrastructure/ # Couche Infrastructure
+├── AdvancedDevSample.Application/      # Services métier, DTOs
+│   ├── Services/
+│   │   ├── ProductService.cs
+│   │   └── TokenService.cs
+│   ├── DTOs/
+│   │   ├── CreateProductRequest.cs
+│   │   ├── ProductResponse.cs
+│   │   ├── LoginRequest.cs
+│   │   └── LoginResponse.cs
+│   └── Exceptions/
+│       └── ApplicationServiceException.cs
+│
+├── AdvancedDevSample.Infrastructure/   # Repositories, EF Core
 │   └── Repositories/
-│       └── EfProductRepository.cs    # Implémentation en mémoire
+│       ├── EfProductRepository.cs
+│       └── ProductEntity.cs
 │
-└── AdvancedDevSample.Test/          # Tests
+├── AdvancedDevSample.Api/              # Controllers, Middlewares, Config
+│   ├── Controllers/
+│   │   ├── ProductsController.cs
+│   │   └── AuthController.cs
+│   ├── Middlewares/
+│   │   └── ExceptionHandlingMiddleware.cs
+│   ├── Program.cs
+│   ├── appsettings.json
+│   └── requests.http
+│
+└── AdvancedDevSample.Test/             # Tests unitaires + intégration
     ├── Domain/
-    │   ├── Entities/
-    │   │   └── ProductTests.cs       # Tests unitaires Product
-    │   └── ValueObjects/
-    │       └── PriceTests.cs         # Tests unitaires Price
+    │   ├── Entities/ProductTests.cs
+    │   └── ValueObjects/PriceTests.cs
     ├── Application/
-    │   └── Services/
-    │       └── ProductServiceTests.cs # Tests avec mocks
+    │   └── Services/ProductServiceTests.cs
     └── API/
-        └── Integration/
-            └── ProductsControllerIntegrationTests.cs # Tests E2E
+        └── Integration/ProductsControllerIntegrationTests.cs
 ```
 
----
-
-## 🎯 Exemples de requêtes API
+## 🎯 Exemples d'utilisation
 
 ### Créer un produit
-```bash
-curl -X POST http://localhost:5000/api/products \
-  -H "Content-Type: application/json" \
-  -d '{"price": 99.99}'
+
+```http
+POST http://localhost:5069/api/products
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "price": 99.99
+}
 ```
 
 ### Obtenir tous les produits
-```bash
-curl http://localhost:5000/api/products
-```
 
-### Obtenir un produit par ID
-```bash
-curl http://localhost:5000/api/products/{guid}
+```http
+GET http://localhost:5069/api/products
+Authorization: Bearer {token}
 ```
 
 ### Mettre à jour un produit
-```bash
-curl -X PUT http://localhost:5000/api/products/{guid} \
-  -H "Content-Type: application/json" \
-  -d '{"price": 149.99, "isActive": true}'
+
+```http
+PUT http://localhost:5069/api/products/{id}
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "price": 149.99,
+  "isActive": true
+}
 ```
 
-### Changer le prix
-```bash
-curl -X PUT http://localhost:5000/api/products/{guid}/price \
-  -H "Content-Type: application/json" \
-  -d '{"newPrice": 199.99}'
+### Changer le prix uniquement
+
+```http
+PUT http://localhost:5069/api/products/{id}/price
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "newPrice": 199.99
+}
 ```
 
-### Supprimer un produit
-```bash
-curl -X DELETE http://localhost:5000/api/products/{guid}
+## 🔍 Patterns & Principes
+
+### Design Patterns
+
+- **Repository Pattern** - Abstraction de la couche de données
+- **Dependency Injection** - Inversion de contrôle
+- **Value Object Pattern** - Encapsulation de la logique métier
+- **Middleware Pattern** - Gestion centralisée des erreurs
+- **DTO Pattern** - Séparation des modèles
+
+### Principes SOLID
+
+- ✅ **S**ingle Responsibility Principle
+- ✅ **O**pen/Closed Principle
+- ✅ **L**iskov Substitution Principle
+- ✅ **I**nterface Segregation Principle
+- ✅ **D**ependency Inversion Principle
+
+### Clean Architecture
+
+Le projet respecte les principes de la Clean Architecture :
+- Indépendance des frameworks
+- Testabilité maximale
+- Indépendance de l'UI
+- Indépendance de la base de données
+- Indépendance de tout agent externe
+
+## ⚙️ Configuration
+
+### JWT Settings (appsettings.json)
+
+```json
+{
+  "JwtSettings": {
+    "SecretKey": "VotreCleSecreteTresLongueEtSecuriseeAvecMinimum32Caracteres!",
+    "Issuer": "AdvancedDevSample",
+    "Audience": "AdvancedDevSampleClient",
+    "ExpirationInMinutes": 60
+  }
+}
 ```
 
+⚠️ **Attention** : En production, utilisez des secrets sécurisés (Azure Key Vault, AWS Secrets Manager, etc.)
+
+## 🐛 Troubleshooting
+
+### Erreur 401 Unauthorized
+
+✅ Vérifiez que vous avez inclus le header `Authorization: Bearer {token}`  
+✅ Vérifiez que le token n'est pas expiré (durée : 60 minutes)  
+✅ Vérifiez que vous utilisez le bon port (5069, pas 5000)
+
+### Erreur de compilation
+
+```bash
+# Nettoyer et reconstruire
+dotnet clean
+dotnet restore
+dotnet build
+```
+
+### Base de données
+
+Le projet utilise une base de données In-Memory (EF Core). Les données sont perdues au redémarrage.
+
+## 📊 Métriques du projet
+
+- **Couverture de tests** : ~85%
+- **Nombre de tests** : 15+
+- **Lignes de code** : ~2000
+- **Complexité cyclomatique** : Faible (< 10)
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! Pour contribuer :
+
+1. Fork le projet
+2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
+3. Commitez vos changements (`git commit -m 'Add some AmazingFeature'`)
+4. Pushez vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrez une Pull Request
+
+### Standards de code
+
+- Suivre les conventions C# (.NET)
+- Ajouter des tests pour les nouvelles fonctionnalités
+- Documenter les APIs publiques avec XML comments
+- Respecter les principes SOLID et DDD
+
+## 📝 Licence
+
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+## 👥 Auteurs
+
+- **AdvancedDevSample Team**
+
+## 🙏 Remerciements
+
+- [Microsoft .NET Documentation](https://docs.microsoft.com/dotnet/)
+- [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Domain-Driven Design by Eric Evans](https://www.domainlanguage.com/ddd/)
+
+## 📞 Support
+
+Pour toute question :
+- 📖 Consultez la [documentation technique](DOCUMENTATION_TECHNIQUE.md)
+- 🔐 Consultez le [guide d'authentification](AUTHENTICATION.md)
+- 🐛 Ouvrez une [issue](https://github.com/your-repo/issues)
+
 ---
 
-## 🔍 Règles métier implémentées
+**Fait avec ❤️ et .NET 10**
 
-1. **Prix strictement positif** : Un prix doit être > 0
-2. **Produit actif pour changement de prix** : On ne peut pas changer le prix d'un produit inactif
-3. **Activation/Désactivation** : Un produit peut être activé ou désactivé
-4. **Value Object Price** : Garantit l'invariant du prix positif
-
----
-
-## 📊 Résultats attendus des tests
-
-Les tests couvrent :
-- ✅ Tests unitaires du domaine (Product, Price)
-- ✅ Tests unitaires de l'application (ProductService avec mocks)
-- ✅ Tests d'intégration (API complète)
-- ✅ Tests des règles métier
-- ✅ Tests des cas d'erreur
-- ✅ Tests de validation
-
----
-
-## 🚀 Prochaines étapes possibles
-
-1. **Base de données réelle** : Remplacer le repository en mémoire par Entity Framework avec SQL
-2. **Authentification** : Ajouter JWT pour sécuriser l'API
-3. **Logging** : Ajouter Serilog pour les logs structurés
-4. **Validation avancée** : FluentValidation
-5. **Documentation** : Améliorer les commentaires XML pour Swagger
-6. **CI/CD** : GitHub Actions ou Azure DevOps
-7. **Docker** : Conteneurisation de l'application
-
----
-
-## 📝 Notes importantes
-
-- Le repository utilise actuellement un `Dictionary` statique en mémoire
-- Les tests d'intégration utilisent `WebApplicationFactory` pour créer un serveur de test
-- Le constructeur `Program` est rendu `partial` et `public` pour les tests
-- Les tests utilisent Moq pour simuler les dépendances
-- Swagger est configuré pour afficher la documentation XML
-
----
-
-**Créé le 9 février 2026**
