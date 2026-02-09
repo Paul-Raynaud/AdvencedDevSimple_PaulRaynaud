@@ -126,18 +126,4 @@ Le token contient les claims suivants :
 - `unique_name` : Nom d'utilisateur
 - `jti` (JWT ID) : Identifiant unique du token
 
-### Validation du token
-
-Le middleware JWT valide automatiquement :
-- ✅ La signature du token
-- ✅ L'émetteur (Issuer)
-- ✅ L'audience (Audience)
-- ✅ La date d'expiration
-- ✅ La clé de signature
-
-## 📚 En savoir plus
-
-- [Documentation Microsoft sur JWT](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/jwt-authn)
-- [JWT.io - Décodeur de tokens](https://jwt.io)
-- [RFC 7519 - JSON Web Token](https://tools.ietf.org/html/rfc7519)
 
