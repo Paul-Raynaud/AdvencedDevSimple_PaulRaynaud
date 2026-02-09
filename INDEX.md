@@ -140,57 +140,6 @@ dotnet build
 
 ---
 
-## 📈 Parcours d'apprentissage recommandé
-
-### Niveau 1 : Débutant
-1. Lire [README.md](README.md)
-2. Lancer l'application
-3. Tester avec Swagger
-4. Lire [AUTHENTICATION.md](AUTHENTICATION.md)
-
-### Niveau 2 : Intermédiaire
-1. Lire [ARCHITECTURE.md](ARCHITECTURE.md)
-2. Explorer le code des controllers
-3. Comprendre ProductService
-4. Voir les diagrammes dans [DIAGRAMMES.md](DIAGRAMMES.md)
-
-### Niveau 3 : Avancé
-1. Lire [DOCUMENTATION_TECHNIQUE.md](DOCUMENTATION_TECHNIQUE.md) complète
-2. Étudier le Domain Layer
-3. Comprendre les patterns utilisés
-4. Écrire de nouveaux tests
-
----
-
-## 🎯 Objectifs de la documentation
-
-Cette documentation vise à :
-- ✅ Faciliter l'onboarding des nouveaux développeurs
-- ✅ Documenter les décisions architecturales
-- ✅ Servir de référence technique
-- ✅ Illustrer les bonnes pratiques .NET
-
----
-
-## 📞 Besoin d'aide ?
-
-1. **Chercher** dans la documentation ci-dessus
-2. **Consulter** les exemples de code existants
-3. **Exécuter** les tests pour voir des cas d'usage
-4. **Déboguer** avec les logs de l'application
-
----
-
-## 📝 Contribuer à la documentation
-
-Pour améliorer cette documentation :
-1. Identifier les sections manquantes ou peu claires
-2. Ajouter des exemples concrets
-3. Mettre à jour les diagrammes si l'architecture change
-4. Ajouter des cas d'usage réels
-
----
-
 **Dernière mise à jour** : 9 février 2026  
 **Version de la documentation** : 1.0  
 **Projet** : AdvancedDevSample .NET 10

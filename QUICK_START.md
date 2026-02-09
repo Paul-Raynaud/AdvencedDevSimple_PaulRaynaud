@@ -336,28 +336,6 @@ Authorization: Bearer {{token}}
 
 ---
 
-## 📚 Pour aller plus loin
-
-- **[README.md](README.md)** - Vue d'ensemble complète
-- **[AUTHENTICATION.md](AUTHENTICATION.md)** - Guide JWT détaillé
-- **[DOCUMENTATION_TECHNIQUE.md](DOCUMENTATION_TECHNIQUE.md)** - Documentation technique
-- **[DIAGRAMMES.md](DIAGRAMMES.md)** - Diagrammes de l'architecture
-
----
-
-## ✅ Checklist de vérification
-
-Avant de commencer le développement :
-
-- [ ] L'application démarre sans erreur
-- [ ] Swagger est accessible
-- [ ] Je peux obtenir un token JWT
-- [ ] Je peux créer un produit avec le token
-- [ ] Je peux lister les produits
-- [ ] Les tests passent : `dotnet test`
-
----
-
 **Temps estimé** : 5-10 minutes  
 **Difficulté** : Débutant  
 **Prérequis** : .NET 10 SDK installé

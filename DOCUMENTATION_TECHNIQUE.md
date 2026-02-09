@@ -776,52 +776,7 @@ curl -X GET http://localhost:5069/api/products \
 - **I**nterface Segregation : Interfaces spécifiques et ciblées
 - **D**ependency Inversion : Dépendance sur des abstractions
 
-### Bonnes pratiques appliquées
 
-✅ Séparation des responsabilités en couches  
-✅ Validation au niveau du domaine  
-✅ Gestion centralisée des erreurs  
-✅ Documentation API avec Swagger  
-✅ Tests unitaires et d'intégration  
-✅ Logging structuré  
-✅ Configuration externalisée  
-✅ Sécurité avec JWT  
-
----
-
-## 📈 Évolutions futures possibles
-
-### Court terme
-- [ ] Ajouter plus de propriétés au produit (nom, description, catégorie)
-- [ ] Implémenter la pagination pour `GET /api/products`
-- [ ] Ajouter des filtres et recherche
-- [ ] Base de données réelle (SQL Server / PostgreSQL)
-
-### Moyen terme
-- [ ] Gestion des utilisateurs avec rôles
-- [ ] Upload d'images de produits
-- [ ] Système de catégories
-- [ ] Historique des modifications (audit trail)
-- [ ] Cache avec Redis
-
-### Long terme
-- [ ] Microservices architecture
-- [ ] Event Sourcing
-- [ ] CQRS pattern
-- [ ] Message queue (RabbitMQ / Kafka)
-- [ ] GraphQL API
-
----
-
-## 📞 Support
-
-Pour toute question ou problème :
-1. Consultez la documentation d'authentification : `AUTHENTICATION.md`
-2. Vérifiez les logs de l'application
-3. Exécutez les tests : `dotnet test`
-4. Utilisez le script de test : `./test-auth.sh`
-
----
 
 ## 📝 Notes de version
 

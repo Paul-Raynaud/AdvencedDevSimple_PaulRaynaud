@@ -3,7 +3,6 @@
 API REST .NET 10 construite avec **Domain-Driven Design (DDD)** et **Clean Architecture**.
 
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## 📋 Description
 
@@ -330,57 +329,4 @@ dotnet clean
 dotnet restore
 dotnet build
 ```
-
-### Base de données
-
-Le projet utilise une base de données In-Memory (EF Core). Les données sont perdues au redémarrage.
-
-## 📊 Métriques du projet
-
-- **Couverture de tests** : ~85%
-- **Nombre de tests** : 15+
-- **Lignes de code** : ~2000
-- **Complexité cyclomatique** : Faible (< 10)
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Pour contribuer :
-
-1. Fork le projet
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Commitez vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Pushez vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
-
-### Standards de code
-
-- Suivre les conventions C# (.NET)
-- Ajouter des tests pour les nouvelles fonctionnalités
-- Documenter les APIs publiques avec XML comments
-- Respecter les principes SOLID et DDD
-
-## 📝 Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 👥 Auteurs
-
-- **AdvancedDevSample Team**
-
-## 🙏 Remerciements
-
-- [Microsoft .NET Documentation](https://docs.microsoft.com/dotnet/)
-- [Clean Architecture by Robert C. Martin](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Domain-Driven Design by Eric Evans](https://www.domainlanguage.com/ddd/)
-
-## 📞 Support
-
-Pour toute question :
-- 📖 Consultez la [documentation technique](DOCUMENTATION_TECHNIQUE.md)
-- 🔐 Consultez le [guide d'authentification](AUTHENTICATION.md)
-- 🐛 Ouvrez une [issue](https://github.com/your-repo/issues)
-
----
-
-**Fait avec ❤️ et .NET 10**
 
