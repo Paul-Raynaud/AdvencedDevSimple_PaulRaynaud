@@ -3,7 +3,6 @@
 API REST .NET 10 construite avec **Domain-Driven Design (DDD)** et **Clean Architecture**.
 
 [![.NET](https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ## 📋 Description
 
