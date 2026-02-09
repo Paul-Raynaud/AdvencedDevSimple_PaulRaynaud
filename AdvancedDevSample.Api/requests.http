@@ -1,0 +1,93 @@
+### AdvancedDevSample API - Collection de tests
+### Base URL
+@baseUrl = http://localhost:5000
+@productId = 
+
+### 1. Créer un produit
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "price": 99.99
+}
+
+### 2. Créer un autre produit
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "price": 149.99
+}
+
+### 3. Obtenir tous les produits
+GET {{baseUrl}}/api/products
+
+### 4. Obtenir un produit par ID (remplacer {id} par un GUID réel)
+GET {{baseUrl}}/api/products/00000000-0000-0000-0000-000000000000
+
+### 5. Mettre à jour un produit (remplacer {id} par un GUID réel)
+PUT {{baseUrl}}/api/products/00000000-0000-0000-0000-000000000000
+Content-Type: application/json
+
+{
+  "price": 199.99,
+  "isActive": true
+}
+
+### 6. Changer uniquement le prix (remplacer {id} par un GUID réel)
+PUT {{baseUrl}}/api/products/00000000-0000-0000-0000-000000000000/price
+Content-Type: application/json
+
+{
+  "newPrice": 299.99
+}
+
+### 7. Supprimer un produit (remplacer {id} par un GUID réel)
+DELETE {{baseUrl}}/api/products/00000000-0000-0000-0000-000000000000
+
+### 8. Test avec un prix invalide (devrait retourner 400)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "price": -10
+}
+
+### 9. Test avec un prix zéro (devrait retourner 400)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "price": 0
+}
+
+### 10. Obtenir un produit inexistant (devrait retourner 404)
+GET {{baseUrl}}/api/products/99999999-9999-9999-9999-999999999999
+
+### 11. Créer un produit, le désactiver, puis essayer de changer le prix
+# Étape 1 : Créer
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "price": 100.00
+}
+
+###
+# Étape 2 : Désactiver (copier l'ID du produit créé ci-dessus)
+PUT {{baseUrl}}/api/products/REPLACE_WITH_REAL_ID
+Content-Type: application/json
+
+{
+  "price": 100.00,
+  "isActive": false
+}
+
+###
+# Étape 3 : Essayer de changer le prix (devrait retourner 400 - Bad Request)
+PUT {{baseUrl}}/api/products/REPLACE_WITH_REAL_ID/price
+Content-Type: application/json
+
+{
+  "newPrice": 200.00
+}
