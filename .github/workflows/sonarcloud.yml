@@ -41,8 +41,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           JwtSettings__SecretKey: ${{ secrets.JWT_SECRET_KEY }}
         run: |
-          dotnet-sonarscanner begin /k:"Paul-Raynaud_AdvencedDevSimple_PaulRaynaud" /o:"paul-raynaud-1" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
+          dotnet-sonarscanner begin /k:"Paul-Raynaud_AdvencedDevSimple_PaulRaynaud" /o:"paul-raynaud-1" /d:sonar.token="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
           dotnet build --no-restore --no-incremental
           dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover || true
-          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
 
