@@ -27,10 +27,10 @@ namespace AdvancedDevSample.Application.Services
         /// <returns>Token JWT sous forme de chaîne</returns>
         public string GenerateToken(string userId, string username)
         {
-            var secretKey = _configuration["JwtSettings:SecretKey"];
+            var secretKey = _configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured");
             var issuer = _configuration["JwtSettings:Issuer"];
             var audience = _configuration["JwtSettings:Audience"];
-            var expirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationInMinutes"]);
+            var expirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationInMinutes"] ?? "60");
 
             // Création de la clé de sécurité à partir de la clé secrète
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));

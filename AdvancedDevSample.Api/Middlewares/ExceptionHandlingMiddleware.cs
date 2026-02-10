@@ -1,8 +1,4 @@
 ﻿using System.Text.Json;
-using AdvancedDevSample.Application.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using System.Net; 
 using AdvancedDevSample.Domain.Exceptions;
 
 
@@ -39,14 +35,14 @@ namespace AdvancedDevSample.Api.Middlewares
             catch (ApplicationServiceException ex)
             {
                _logger.LogError(ex, "Erreur applicative.");
-                context.Response.StatusCode = (int)ex.StatusCode;
+                context.Response.StatusCode = ex.StatusCode;
                 await context.Response.WriteAsJsonAsync(
                            new { title = "Ressource introuvable", detail = ex.Message });
             }
             catch (InfrastructureException ex)
             {
                 _logger.LogError(ex, "Erreur technique.");
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
 
                 await context.Response.WriteAsJsonAsync(
@@ -55,7 +51,7 @@ namespace AdvancedDevSample.Api.Middlewares
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Erreur innatendue.");
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
                 await context.Response.WriteAsJsonAsync(
                            new { title = "Erreur serveur", detail = "Une erreur interne." });

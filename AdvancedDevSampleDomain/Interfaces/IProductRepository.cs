@@ -1,4 +1,4 @@
-﻿﻿using System;
+﻿﻿﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using AdvancedDevSample.Domain.Entities;
@@ -8,7 +8,7 @@ namespace AdvancedDevSample.Domain.Interfaces
     {
         void Add(Product product);
         void Save(Product product);
-        Product GetById(Guid id);
+        Product? GetById(Guid id);
         IEnumerable<Product> GetAll();
         void Delete(Guid id);
         bool Exists(Guid id);

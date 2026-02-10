@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using AdvancedDevSample.Domain.Entities;
+﻿using AdvancedDevSample.Domain.Entities;
 using AdvancedDevSample.Domain.Exceptions;
 using AdvancedDevSample.Domain.Interfaces;
 using AdvancedDevSample.Application.DTOs;
 using AdvancedDevSample.Domain.ValueObjects;
-using AdvancedDevSample.Application.Exceptions;
 
-namespace AdvancedDevSample.Domain.Services
+namespace AdvancedDevSample.Application.Services
 {
     public class ProductService
     {
+        private const string ProductNotFoundMessage = "Produit non trouvé.";
         private readonly IProductRepository _repo;
 
         public ProductService(IProductRepository repo)
@@ -32,7 +29,7 @@ namespace AdvancedDevSample.Domain.Services
         public ProductResponse GetProduct(Guid id)
         {
             var product = _repo.GetById(id)
-                ?? throw new ApplicationServiceException("Produit non trouvé.");
+                ?? throw new ApplicationServiceException(ProductNotFoundMessage);
             
             return MapToResponse(product);
         }
@@ -45,7 +42,7 @@ namespace AdvancedDevSample.Domain.Services
         public ProductResponse UpdateProduct(Guid id, UpdateProductRequest request)
         {
             var product = _repo.GetById(id)
-                ?? throw new ApplicationServiceException("Produit non trouvé.");
+                ?? throw new ApplicationServiceException(ProductNotFoundMessage);
 
             var newPrice = new Price(request.Price);
             product.ChangePrice(newPrice);
@@ -66,7 +63,7 @@ namespace AdvancedDevSample.Domain.Services
         public void DeleteProduct(Guid id)
         {
             if (!_repo.Exists(id))
-                throw new ApplicationServiceException("Produit non trouvé.");
+                throw new ApplicationServiceException(ProductNotFoundMessage);
             
             _repo.Delete(id);
         }
@@ -74,7 +71,7 @@ namespace AdvancedDevSample.Domain.Services
         public void ChangePrice(Guid id, ChangePriceRequest request)
         {
             var product = _repo.GetById(id)
-                ?? throw new ApplicationServiceException("Produit non trouvé.");
+                ?? throw new ApplicationServiceException(ProductNotFoundMessage);
             
             var newPrice = new Price(request.NewPrice);
             product.ChangePrice(newPrice);

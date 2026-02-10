@@ -8,12 +8,12 @@ namespace AdvancedDevSample.Application.DTOs
         /// <summary>
         /// Token JWT à utiliser pour les requêtes authentifiées
         /// </summary>
-        public string Token { get; set; }
+        public required string Token { get; set; }
 
         /// <summary>
         /// Nom d'utilisateur
         /// </summary>
-        public string Username { get; set; }
+        public required string Username { get; set; }
 
         /// <summary>
         /// Date d'expiration du token

@@ -1,11 +1,8 @@
 ﻿﻿using AdvancedDevSample.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using AdvancedDevSample.Domain.Services;
+using AdvancedDevSample.Application.Services;
 using AdvancedDevSample.Application.DTOs;
-using AdvancedDevSample.Application.Exceptions;
-using System;
-using System.Collections.Generic;
 
 namespace AdvancedDevSample.Api.Controllers
 {

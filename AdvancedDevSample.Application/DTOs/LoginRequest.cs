@@ -8,11 +8,11 @@ namespace AdvancedDevSample.Application.DTOs
         /// <summary>
         /// Nom d'utilisateur
         /// </summary>
-        public string Username { get; set; }
+        public required string Username { get; set; }
 
         /// <summary>
         /// Mot de passe
         /// </summary>
-        public string Password { get; set; }
+        public required string Password { get; set; }
     }
 }

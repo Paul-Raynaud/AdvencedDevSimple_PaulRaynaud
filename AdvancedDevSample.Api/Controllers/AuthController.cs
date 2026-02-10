@@ -1,7 +1,6 @@
 using AdvancedDevSample.Application.DTOs;
 using AdvancedDevSample.Application.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 
 namespace AdvancedDevSample.Api.Controllers
 {
@@ -37,8 +36,8 @@ namespace AdvancedDevSample.Api.Controllers
         [ProducesResponseType(401)]
         public IActionResult Login([FromBody] LoginRequest request)
         {
-            // TODO: Remplacer par une vraie validation utilisateur avec base de données
-            // Pour l'instant, on utilise des identifiants en dur pour la démo
+            // Validation d'authentification en dur pour la démo
+            // En production, ceci devrait être remplacé par une validation avec base de données et hachage de mot de passe
             if ((request.Username == "admin" && request.Password == "password") ||
                 (request.Username == "user" && request.Password == "password"))
             {
@@ -47,7 +46,7 @@ namespace AdvancedDevSample.Api.Controllers
                     username: request.Username
                 );
 
-                var expirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationInMinutes"]);
+                var expirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationInMinutes"] ?? "60");
                 
                 return Ok(new LoginResponse
                 {

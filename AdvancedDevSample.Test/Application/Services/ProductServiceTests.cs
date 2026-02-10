@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Xunit;
 using Moq;
-using AdvancedDevSample.Domain.Services;
+using AdvancedDevSample.Application.Services;
 using AdvancedDevSample.Domain.Entities;
 using AdvancedDevSample.Domain.Interfaces;
 using AdvancedDevSample.Domain.ValueObjects;
 using AdvancedDevSample.Application.DTOs;
-using AdvancedDevSample.Application.Exceptions;
 using AdvancedDevSample.Domain.Exceptions;
 
 namespace AdvancedDevSample.Test.Application.Services

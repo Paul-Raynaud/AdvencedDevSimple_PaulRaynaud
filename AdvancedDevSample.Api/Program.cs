@@ -1,6 +1,5 @@
 using AdvancedDevSample.Api.Middlewares;
 using System.Text;
-using AdvancedDevSample.Domain.Services;
 using AdvancedDevSample.Domain.Interfaces;
 using AdvancedDevSample.Infrastructure.Repositories;
 using AdvancedDevSample.Application.Services;
@@ -132,10 +131,12 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
-app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
 // Rendre Program accessible pour les tests d'intégration
-public partial class Program { }
+public partial class Program
+{
+    protected Program() { }
+}
 
