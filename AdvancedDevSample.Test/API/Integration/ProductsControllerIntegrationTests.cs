@@ -214,5 +214,94 @@ namespace AdvancedDevSample.Test.API.Integration
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }
+
+        [Fact]
+        public async Task CreateProduct_WithZeroPrice_ShouldReturn400()
+        {
+            // Arrange
+            var request = new CreateProductRequest { Price = 0m };
+
+            // Act
+            var response = await _client.PostAsJsonAsync("/api/products", request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateProduct_WithInactiveProductAndPriceChange_ShouldReturn400()
+        {
+            // Arrange - Créer un produit et le désactiver
+            var createRequest = new CreateProductRequest { Price = 100m };
+            var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
+            var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
+
+            var deactivateRequest = new UpdateProductRequest { Price = 100m, IsActive = false };
+            await _client.PutAsJsonAsync($"/api/products/{createdProduct.Id}", deactivateRequest);
+
+            // Act - Essayer de changer le prix d'un produit inactif
+            var updateRequest = new UpdateProductRequest { Price = 200m, IsActive = false };
+            var response = await _client.PutAsJsonAsync($"/api/products/{createdProduct.Id}", updateRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ChangePrice_WithNonExistingId_ShouldReturn404()
+        {
+            // Arrange
+            var nonExistingId = Guid.NewGuid();
+            var changePriceRequest = new ChangePriceRequest { NewPrice = 300m };
+
+            // Act
+            var response = await _client.PutAsJsonAsync($"/api/products/{nonExistingId}/price", changePriceRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task ChangePrice_WithNegativePrice_ShouldReturn400()
+        {
+            // Arrange
+            var createRequest = new CreateProductRequest { Price = 100m };
+            var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
+            var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
+
+            var changePriceRequest = new ChangePriceRequest { NewPrice = -50m };
+
+            // Act
+            var response = await _client.PutAsJsonAsync($"/api/products/{createdProduct.Id}/price", changePriceRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateProduct_ActivateDeactivatedProduct_ShouldReturn200()
+        {
+            // Arrange
+            var createRequest = new CreateProductRequest { Price = 100m };
+            var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
+            var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
+
+            // Désactiver
+            var deactivateRequest = new UpdateProductRequest { Price = 100m, IsActive = false };
+            await _client.PutAsJsonAsync($"/api/products/{createdProduct.Id}", deactivateRequest);
+
+            // Act - Réactiver
+            var activateRequest = new UpdateProductRequest { Price = 100m, IsActive = true };
+            var response = await _client.PutAsJsonAsync($"/api/products/{createdProduct.Id}", activateRequest);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            var reactivatedProduct = await response.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(reactivatedProduct);
+            Assert.True(reactivatedProduct.IsActive);
+        }
     }
 }
