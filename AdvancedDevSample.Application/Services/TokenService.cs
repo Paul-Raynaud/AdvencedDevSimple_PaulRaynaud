@@ -1,6 +1,5 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -27,7 +26,11 @@ namespace AdvancedDevSample.Application.Services
         /// <returns>Token JWT sous forme de chaîne</returns>
         public string GenerateToken(string userId, string username)
         {
-            var secretKey = _configuration["JwtSettings:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured");
+            // La clé secrète est récupérée depuis les variables d'environnement ou User Secrets
+            // Elle n'est JAMAIS stockée en dur dans le code ou les fichiers de configuration versionnés
+            var secretKey = _configuration["JwtSettings:SecretKey"] 
+                ?? throw new InvalidOperationException("JWT SecretKey is not configured. Please set it via environment variables or User Secrets.");
+            
             var issuer = _configuration["JwtSettings:Issuer"];
             var audience = _configuration["JwtSettings:Audience"];
             var expirationMinutes = int.Parse(_configuration["JwtSettings:ExpirationInMinutes"] ?? "60");
