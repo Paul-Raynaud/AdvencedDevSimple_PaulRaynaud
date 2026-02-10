@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -19,7 +18,7 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
         {
             // Générer une clé JWT aléatoire sécurisée pour les tests d'intégration
             var randomBytes = new byte[64];
-            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(randomBytes);
             }
@@ -46,12 +45,11 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", _ => { });
             
             // Désactiver l'autorisation pour les tests
-            services.AddAuthorization(options =>
-            {
-                options.DefaultPolicy = new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
+            // Utilisation de AddAuthorizationBuilder (ASP.NET Core 8.0+) au lieu de AddAuthorization
+            services.AddAuthorizationBuilder()
+                .SetDefaultPolicy(new Microsoft.AspNetCore.Authorization.AuthorizationPolicyBuilder()
                     .RequireAssertion(_ => true) // Toujours autoriser
-                    .Build();
-            });
+                    .Build());
         });
     }
 }
