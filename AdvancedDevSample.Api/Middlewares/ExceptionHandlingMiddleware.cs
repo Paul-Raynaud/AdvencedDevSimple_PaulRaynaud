@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using AdvancedDevSample.Domain.Exceptions;
+using Microsoft.Extensions.Hosting;
 
 
 namespace AdvancedDevSample.Api.Middlewares
@@ -8,12 +9,14 @@ namespace AdvancedDevSample.Api.Middlewares
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        private readonly IHostEnvironment _env;
     
 
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger, IHostEnvironment env)
         {
             _next = next;
             _logger = logger;
+            _env = env;
         }
 
 
@@ -53,10 +56,13 @@ namespace AdvancedDevSample.Api.Middlewares
                 _logger.LogError(ex, "Erreur innatendue.");
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsJsonAsync(
-                           new { title = "Erreur serveur", detail = "Une erreur interne." });
+                
+                object response = _env.IsDevelopment() 
+                    ? new { title = "Erreur serveur", detail = ex.Message, stackTrace = ex.StackTrace }
+                    : new { title = "Erreur serveur", detail = "Une erreur interne." };
+
+                await context.Response.WriteAsJsonAsync(response);
             }
         }
     }
 }
-

@@ -12,10 +12,10 @@ namespace AdvancedDevSample.Api.Controllers
     [Produces("application/json")]
     public class AuthController : ControllerBase
     {
-        private readonly TokenService _tokenService;
+        private readonly ITokenService _tokenService;
         private readonly IConfiguration _configuration;
 
-        public AuthController(TokenService tokenService, IConfiguration configuration)
+        public AuthController(ITokenService tokenService, IConfiguration configuration)
         {
             _tokenService = tokenService;
             _configuration = configuration;

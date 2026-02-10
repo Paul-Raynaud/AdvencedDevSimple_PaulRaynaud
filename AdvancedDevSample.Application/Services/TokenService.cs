@@ -10,7 +10,7 @@ namespace AdvancedDevSample.Application.Services
     /// <summary>
     /// Service de génération de tokens JWT pour l'authentification
     /// </summary>
-    public class TokenService
+    public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
 

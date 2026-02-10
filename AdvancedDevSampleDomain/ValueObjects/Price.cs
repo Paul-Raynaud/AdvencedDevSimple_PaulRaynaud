@@ -1,9 +1,10 @@
+using System.Globalization;
 using AdvancedDevSample.Domain.Exceptions;
 
 namespace AdvancedDevSample.Domain.ValueObjects
 {
     /// <summary>
-    /// Value Object représentant un prix strictement positif.
+    /// Value Object representant un prix strictement positif.
     /// </summary>
     public readonly record struct Price
     {
@@ -19,6 +20,6 @@ namespace AdvancedDevSample.Domain.ValueObjects
             Value = value;
         }
 
-        public override string ToString() => Value.ToString("F2");
+        public override string ToString() => Value.ToString("F2", CultureInfo.InvariantCulture);
     }
 }

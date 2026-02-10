@@ -71,6 +71,9 @@ if (string.IsNullOrEmpty(secretKey))
             rng.GetBytes(randomBytes);
         }
         secretKey = Convert.ToBase64String(randomBytes);
+        
+        // IMPORTANT : Mettre à jour la configuration pour que TokenService puisse la lire
+        builder.Configuration["JwtSettings:SecretKey"] = secretKey;
     }
     else
     {
@@ -132,7 +135,7 @@ builder.Services.AddAuthorization();
 // C'est ici que l'on lie l'interface à son implémentation pour corriger l'erreur d'exécution
 builder.Services.AddScoped<IProductRepository, EfProductRepository>();
 builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 
 var app = builder.Build();
@@ -156,6 +159,53 @@ app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
+// ⚠️ ENDPOINT DE TEST JWT - UNIQUEMENT EN DEVELOPMENT
+if (app.Environment.IsDevelopment())
+{
+    app.MapPost("/api/auth/test-token", (ITokenService tokenService) =>
+    {
+        try
+        {
+            Console.WriteLine("🔑 Génération d'un token de test...");
+            
+            var token = tokenService.GenerateToken(
+                userId: "test-user-123",
+                username: "testuser@example.com"
+            );
+            
+            Console.WriteLine($"✅ Token généré avec succès");
+            Console.WriteLine($"   Longueur: {token.Length} caractères");
+            Console.WriteLine($"   Début: {token[..Math.Min(20, token.Length)]}...");
+            
+            return Results.Ok(new
+            {
+                success = true,
+                token,
+                userId = "test-user-123",
+                username = "testuser@example.com",
+                expiresInMinutes = 60,
+                message = "Token de test généré. Utilisez-le dans l'en-tête: Authorization: Bearer {token}"
+            });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Erreur lors de la génération du token: {ex.Message}");
+            Console.WriteLine($"   Stack: {ex.StackTrace}");
+            
+            return Results.Problem(
+                title: "Erreur de génération du token",
+                detail: $"{ex.Message}\n\nVérifiez que JwtSettings:SecretKey est configuré dans appsettings.Development.json ou via User Secrets.",
+                statusCode: 500
+            );
+        }
+    })
+    .WithName("GenerateTestToken")
+    .WithTags("Authentication (Dev Only)")
+    .AllowAnonymous();
+    
+    Console.WriteLine("🔓 Endpoint de test activé: POST /api/auth/test-token");
+}
+
 await app.RunAsync();
 
 // Rendre Program accessible pour les tests d'intégration
@@ -163,4 +213,3 @@ public partial class Program
 {
     protected Program() { }
 }
-

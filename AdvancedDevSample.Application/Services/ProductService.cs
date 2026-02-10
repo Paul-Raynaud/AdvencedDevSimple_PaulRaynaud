@@ -1,4 +1,4 @@
-﻿using AdvancedDevSample.Domain.Entities;
+﻿﻿using AdvancedDevSample.Domain.Entities;
 using AdvancedDevSample.Domain.Exceptions;
 using AdvancedDevSample.Domain.Interfaces;
 using AdvancedDevSample.Application.DTOs;
@@ -8,7 +8,7 @@ namespace AdvancedDevSample.Application.Services
 {
     public class ProductService
     {
-        private const string ProductNotFoundMessage = "Produit non trouvé.";
+        public const string ProductNotFoundMessage = "Produit non trouvé.";
         private readonly IProductRepository _repo;
 
         public ProductService(IProductRepository repo)

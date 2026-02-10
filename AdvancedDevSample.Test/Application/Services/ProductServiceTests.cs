@@ -78,7 +78,7 @@ namespace AdvancedDevSample.Test.Application.Services
 
             // Act & Assert
             var exception = Assert.Throws<ApplicationServiceException>(() => _productService.GetProduct(productId));
-            Assert.Equal("Produit non trouvé.", exception.Message);
+            Assert.Equal(ProductService.ProductNotFoundMessage, exception.Message);
         }
 
         [Fact]
@@ -175,7 +175,7 @@ namespace AdvancedDevSample.Test.Application.Services
 
             // Act & Assert
             var exception = Assert.Throws<ApplicationServiceException>(() => _productService.DeleteProduct(productId));
-            Assert.Equal("Produit non trouvé.", exception.Message);
+            Assert.Equal(ProductService.ProductNotFoundMessage, exception.Message);
         }
 
         [Fact]
