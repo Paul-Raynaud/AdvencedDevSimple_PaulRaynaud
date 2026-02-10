@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -16,10 +17,18 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
         builder.ConfigureAppConfiguration((_, config) =>
         {
-            // Ajouter une configuration de test avec une clé JWT de test
+            // Générer une clé JWT aléatoire sécurisée pour les tests d'intégration
+            var randomBytes = new byte[64];
+            using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomBytes);
+            }
+            var testSecretKey = Convert.ToBase64String(randomBytes);
+            
+            // Ajouter une configuration de test avec une clé JWT générée aléatoirement
             config.AddInMemoryCollection(new Dictionary<string, string?>
             {
-                ["JwtSettings:SecretKey"] = "ThisIsATestSecretKeyForIntegrationTestsOnly123456789",
+                ["JwtSettings:SecretKey"] = testSecretKey,
                 ["JwtSettings:Issuer"] = "AdvancedDevSample.Test",
                 ["JwtSettings:Audience"] = "AdvancedDevSample.Test",
                 ["JwtSettings:ExpirationInMinutes"] = "60"

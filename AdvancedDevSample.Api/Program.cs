@@ -58,11 +58,19 @@ var secretKey = jwtSettings["SecretKey"];
 if (string.IsNullOrEmpty(secretKey))
 {
     var env = builder.Environment.EnvironmentName;
-    // En environnement de test, on utilise une clé par défaut
+    // En environnement de test, on génère une clé aléatoire temporaire
     if (env == "Development" || env == "Test")
     {
-        Console.WriteLine("⚠️  WARNING: Using default JWT secret key for testing purposes only!");
-        secretKey = "DefaultTestSecretKeyForDevelopmentAndTestingOnly12345678901234567890";
+        Console.WriteLine("⚠️  WARNING: Generating random JWT secret key for testing purposes only!");
+        Console.WriteLine("⚠️  This should NEVER be used in production. Set JwtSettings:SecretKey via environment variables or User Secrets.");
+        
+        // Génération d'une clé aléatoire sécurisée de 64 bytes (512 bits)
+        var randomBytes = new byte[64];
+        using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(randomBytes);
+        }
+        secretKey = Convert.ToBase64String(randomBytes);
     }
     else
     {
