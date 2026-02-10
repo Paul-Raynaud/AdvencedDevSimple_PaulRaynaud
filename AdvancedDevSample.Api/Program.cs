@@ -52,34 +52,7 @@ builder.Services.AddSwaggerGen(options =>
 
 // Configuration de l'authentification JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"];
-
-// Si la clé secrète n'est pas configurée, on lance une exception sauf en environnement de test
-if (string.IsNullOrEmpty(secretKey))
-{
-    var env = builder.Environment.EnvironmentName;
-    // En environnement de test, on génère une clé aléatoire temporaire
-    if (env == "Development" || env == "Test")
-    {
-        Console.WriteLine("⚠️  WARNING: Generating random JWT secret key for testing purposes only!");
-        Console.WriteLine("⚠️  This should NEVER be used in production. Set JwtSettings:SecretKey via environment variables or User Secrets.");
-        
-        // Génération d'une clé aléatoire sécurisée de 64 bytes (512 bits)
-        var randomBytes = new byte[64];
-        using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(randomBytes);
-        }
-        secretKey = Convert.ToBase64String(randomBytes);
-        
-        // IMPORTANT : Mettre à jour la configuration pour que TokenService puisse la lire
-        builder.Configuration["JwtSettings:SecretKey"] = secretKey;
-    }
-    else
-    {
-        throw new InvalidOperationException("JWT SecretKey is not configured. Please set it via environment variables or User Secrets.");
-    }
-}
+var secretKey = EnsureJwtSecretKey(builder.Configuration, builder.Environment);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -88,48 +61,10 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings["Issuer"],
-        ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-    };
-    
-    // Événements de débogage pour diagnostiquer les problèmes d'authentification
-    options.Events = new JwtBearerEvents
-    {
-        OnAuthenticationFailed = context =>
-        {
-            Console.WriteLine($"❌ JWT Authentication Failed: {context.Exception.Message}");
-            if (context.Exception.InnerException != null)
-            {
-                Console.WriteLine($"   Inner Exception: {context.Exception.InnerException.Message}");
-            }
-            return Task.CompletedTask;
-        },
-        OnTokenValidated = context =>
-        {
-            Console.WriteLine("✅ JWT Token Validated Successfully");
-            var claims = context.Principal?.Claims.Select(c => $"{c.Type}: {c.Value}");
-            if (claims != null)
-            {
-                Console.WriteLine($"   Claims: {string.Join(", ", claims)}");
-            }
-            return Task.CompletedTask;
-        },
-        OnChallenge = context =>
-        {
-            Console.WriteLine($"⚠️  JWT Challenge: {context.Error}, {context.ErrorDescription}");
-            return Task.CompletedTask;
-        }
-    };
+    ConfigureJwtBearer(options, jwtSettings, secretKey);
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorizationBuilder();
 
 // Enregistrement des dépendances de l'application
 // C'est ici que l'on lie l'interface à son implémentation pour corriger l'erreur d'exécution
@@ -207,6 +142,88 @@ if (app.Environment.IsDevelopment())
 }
 
 await app.RunAsync();
+
+// --- MÉTHODES D'ASSISTANCE POUR RÉDUIRE LA COMPLEXITÉ COGNITIVE ---
+
+static string EnsureJwtSecretKey(IConfiguration configuration, IHostEnvironment environment)
+{
+    var secretKey = configuration["JwtSettings:SecretKey"];
+
+    if (string.IsNullOrEmpty(secretKey))
+    {
+        var env = environment.EnvironmentName;
+        if (env == "Development" || env == "Test")
+        {
+            secretKey = GenerateTemporaryJwtKey(configuration);
+        }
+        else
+        {
+            throw new InvalidOperationException("JWT SecretKey is not configured. Please set it via environment variables or User Secrets.");
+        }
+    }
+
+    return secretKey;
+}
+
+static string GenerateTemporaryJwtKey(IConfiguration configuration)
+{
+    Console.WriteLine("⚠️  WARNING: Generating random JWT secret key for testing purposes only!");
+    Console.WriteLine("⚠️  This should NEVER be used in production. Set JwtSettings:SecretKey via environment variables or User Secrets.");
+
+    var randomBytes = new byte[64];
+    using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+    {
+        rng.GetBytes(randomBytes);
+    }
+    var secretKey = Convert.ToBase64String(randomBytes);
+
+    // IMPORTANT : Mettre à jour la configuration pour que TokenService puisse la lire
+    configuration["JwtSettings:SecretKey"] = secretKey;
+
+    return secretKey;
+}
+
+static void ConfigureJwtBearer(JwtBearerOptions options, IConfigurationSection jwtSettings, string secretKey)
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"❌ JWT Authentication Failed: {context.Exception.Message}");
+            if (context.Exception.InnerException != null)
+            {
+                Console.WriteLine($"   Inner Exception: {context.Exception.InnerException.Message}");
+            }
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("✅ JWT Token Validated Successfully");
+            var claims = context.Principal?.Claims.Select(c => $"{c.Type}: {c.Value}");
+            if (claims != null)
+            {
+                Console.WriteLine($"   Claims: {string.Join(", ", claims)}");
+            }
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            Console.WriteLine($"⚠️  JWT Challenge: {context.Error}, {context.ErrorDescription}");
+            return Task.CompletedTask;
+        }
+    };
+}
 
 // Rendre Program accessible pour les tests d'intégration
 public partial class Program
