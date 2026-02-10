@@ -74,7 +74,7 @@ namespace AdvancedDevSample.Test.Application.Services
         {
             // Arrange
             var productId = Guid.NewGuid();
-            _mockRepository.Setup(r => r.GetById(productId)).Returns((Product)null);
+            _mockRepository.Setup(r => r.GetById(productId)).Returns((Product?)null);
 
             // Act & Assert
             var exception = Assert.Throws<ApplicationServiceException>(() => _productService.GetProduct(productId));
@@ -130,7 +130,7 @@ namespace AdvancedDevSample.Test.Application.Services
             // Arrange
             var productId = Guid.NewGuid();
             var request = new UpdateProductRequest { Price = 150m };
-            _mockRepository.Setup(r => r.GetById(productId)).Returns((Product)null);
+            _mockRepository.Setup(r => r.GetById(productId)).Returns((Product?)null);
 
             // Act & Assert
             Assert.Throws<ApplicationServiceException>(() => _productService.UpdateProduct(productId, request));

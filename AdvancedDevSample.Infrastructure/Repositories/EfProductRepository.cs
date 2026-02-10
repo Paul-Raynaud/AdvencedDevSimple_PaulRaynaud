@@ -1,4 +1,4 @@
-﻿﻿﻿using AdvancedDevSample.Domain.Entities;
+﻿﻿﻿﻿using AdvancedDevSample.Domain.Entities;
 using AdvancedDevSample.Domain.Interfaces;
 
 namespace AdvancedDevSample.Infrastructure.Repositories
@@ -10,8 +10,7 @@ namespace AdvancedDevSample.Infrastructure.Repositories
 
         public void Add(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
             
             if (Products.ContainsKey(product.Id))
                 throw new InvalidOperationException($"Un produit avec l'ID {product.Id} existe déjà.");
@@ -32,8 +31,7 @@ namespace AdvancedDevSample.Infrastructure.Repositories
 
         public void Save(Product product)
         {
-            if (product == null)
-                throw new ArgumentNullException(nameof(product));
+            ArgumentNullException.ThrowIfNull(product);
             
             Products[product.Id] = product;
             Console.WriteLine($"Produit avec ID {product.Id} sauvegardé avec le prix {product.Price}.");

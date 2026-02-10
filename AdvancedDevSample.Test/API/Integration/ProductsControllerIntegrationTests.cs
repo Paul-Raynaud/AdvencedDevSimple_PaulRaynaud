@@ -12,11 +12,11 @@ namespace AdvancedDevSample.Test.API.Integration
     /// <summary>
     /// Tests d'intégration pour l'API Products
     /// </summary>
-    public class ProductsControllerIntegrationTests : IClassFixture<WebApplicationFactory<Program>>
+    public class ProductsControllerIntegrationTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
 
-        public ProductsControllerIntegrationTests(WebApplicationFactory<Program> factory)
+        public ProductsControllerIntegrationTests(CustomWebApplicationFactory factory)
         {
             _client = factory.CreateClient();
         }
@@ -58,6 +58,7 @@ namespace AdvancedDevSample.Test.API.Integration
             var createRequest = new CreateProductRequest { Price = 150m };
             var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
             var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
 
             // Act
             var response = await _client.GetAsync($"/api/products/{createdProduct.Id}");
@@ -107,6 +108,7 @@ namespace AdvancedDevSample.Test.API.Integration
             var createRequest = new CreateProductRequest { Price = 100m };
             var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
             var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
 
             var updateRequest = new UpdateProductRequest { Price = 250m, IsActive = true };
 
@@ -116,6 +118,7 @@ namespace AdvancedDevSample.Test.API.Integration
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
             var updatedProduct = await response.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(updatedProduct);
             Assert.Equal(250m, updatedProduct.Price);
             Assert.True(updatedProduct.IsActive);
         }
@@ -141,6 +144,7 @@ namespace AdvancedDevSample.Test.API.Integration
             var createRequest = new CreateProductRequest { Price = 100m };
             var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
             var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
 
             // Act
             var response = await _client.DeleteAsync($"/api/products/{createdProduct.Id}");
@@ -173,6 +177,7 @@ namespace AdvancedDevSample.Test.API.Integration
             var createRequest = new CreateProductRequest { Price = 100m };
             var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
             var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
 
             var changePriceRequest = new ChangePriceRequest { NewPrice = 300m };
 
@@ -185,6 +190,7 @@ namespace AdvancedDevSample.Test.API.Integration
             // Vérifier que le prix a été changé
             var getResponse = await _client.GetAsync($"/api/products/{createdProduct.Id}");
             var product = await getResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(product);
             Assert.Equal(300m, product.Price);
         }
 
@@ -195,6 +201,7 @@ namespace AdvancedDevSample.Test.API.Integration
             var createRequest = new CreateProductRequest { Price = 100m };
             var createResponse = await _client.PostAsJsonAsync("/api/products", createRequest);
             var createdProduct = await createResponse.Content.ReadFromJsonAsync<ProductResponse>();
+            Assert.NotNull(createdProduct);
 
             var deactivateRequest = new UpdateProductRequest { Price = 100m, IsActive = false };
             await _client.PutAsJsonAsync($"/api/products/{createdProduct.Id}", deactivateRequest);

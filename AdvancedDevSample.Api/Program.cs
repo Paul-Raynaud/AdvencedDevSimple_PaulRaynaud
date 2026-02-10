@@ -52,7 +52,23 @@ builder.Services.AddSwaggerGen(options =>
 
 // Configuration de l'authentification JWT
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
-var secretKey = jwtSettings["SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured");
+var secretKey = jwtSettings["SecretKey"];
+
+// Si la clé secrète n'est pas configurée, on lance une exception sauf en environnement de test
+if (string.IsNullOrEmpty(secretKey))
+{
+    var env = builder.Environment.EnvironmentName;
+    // En environnement de test, on utilise une clé par défaut
+    if (env == "Development" || env == "Test")
+    {
+        Console.WriteLine("⚠️  WARNING: Using default JWT secret key for testing purposes only!");
+        secretKey = "DefaultTestSecretKeyForDevelopmentAndTestingOnly12345678901234567890";
+    }
+    else
+    {
+        throw new InvalidOperationException("JWT SecretKey is not configured. Please set it via environment variables or User Secrets.");
+    }
+}
 
 builder.Services.AddAuthentication(options =>
 {
